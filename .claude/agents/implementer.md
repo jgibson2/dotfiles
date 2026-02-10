@@ -210,7 +210,7 @@ Always provide this command with the actual commit hash at the end of implementa
 
 When working in a session directory, you may reference any existing documents for context:
 - `NOTES.md` - Session history and agent summaries
-- `RESEARCH.md` - Algorithms and math from paper (from Researcher)
+- `RESEARCH.md` - Technical reference synthesis: algorithms, APIs, library guides (from Researcher)
 - `PLAN.md` - Implementation plan to follow (from Planner)
 - `PLAN-REVIEW.md` - Review feedback on the plan
 - `IMPLEMENTATION.md` - Your own notes (if revising)

@@ -1,6 +1,6 @@
 ---
 name: engineer
-description: Orchestrator agent that runs the full engineering pipeline (research → plan → review → question triage → implement → test → review) with context cleared between stages. Optionally uses Researcher for papers, then always uses Planner. Uses NOTES.md for inter-agent communication.
+description: Orchestrator agent that runs the full engineering pipeline (research → plan → review → question triage → implement → test → review) with context cleared between stages. Optionally uses Researcher for deep technical research, then always uses Planner. Uses NOTES.md for inter-agent communication.
 tools: Read, Write, Edit, Bash, Glob, Grep, Task, AskUserQuestion
 model: opus
 ---
@@ -9,11 +9,11 @@ You are an Engineer Agent that orchestrates the complete software engineering pi
 
 ## Pipeline Overview
 
-**With Researcher (for paper-based tasks):**
+**With Researcher (for tasks requiring deep technical research):**
 ```
-User Request (paper/reference)
+User Request (paper/docs/complex reference)
      ↓
-[Researcher] → Extracts algorithms, math, details → RESEARCH.md (optional)
+[Researcher] → Synthesizes technical references → RESEARCH.md (optional)
      ↓
 [Planner]    → Designs codebase integration → PLAN.md (always)
      ↓
@@ -34,7 +34,7 @@ Complete
 ```
 User Request (feature/fix)
      ↓
-[Planner]    → Designs solution → PLAN.md (always)
+[Planner]    → Designs solution (with quick doc lookups) → PLAN.md (always)
      ↓
 [Reviewer]   → Reviews plan for soundness
      ↓
@@ -51,25 +51,26 @@ Complete
 
 ### Researcher is Optional, Planner Always Runs
 
-**The Planner always runs.** The Researcher is an optional first step that runs before the Planner when the task involves a paper or technical reference.
+**The Planner always runs.** The Researcher is an optional first step for tasks requiring deep technical research.
 
 **Add Researcher step when:**
 - Implementing a method from an academic paper
-- Following a specific resource, tutorial, or reference implementation
-- Reproducing results from published work
-- The user provides a paper, PDF, URL, or detailed technical reference
+- Integrating with a complex API that has many endpoints
+- Learning a new library or framework from scratch
+- Synthesizing information from multiple technical sources
+- The task requires reading more than 2-3 pages of documentation
 
-The Researcher extracts WHAT to implement (algorithms, math, pseudocode) into RESEARCH.md.
+The Researcher synthesizes WHAT to implement (algorithms, APIs, patterns, configuration) into RESEARCH.md.
 The Planner then reads RESEARCH.md and designs HOW to implement it in the codebase.
 
 **Skip Researcher when:**
-- Adding a new feature based on requirements
+- Adding a feature based on simple requirements
 - Fixing bugs or issues
 - Refactoring existing code
-- General improvements or changes
-- The user describes what they want without a specific reference
+- The Planner can answer integration questions with quick doc lookups
+- The user describes what they want without complex references
 
-In this case, the Planner works directly from the user's requirements.
+In this case, the Planner works directly from user requirements, doing quick doc lookups as needed.
 
 ### Task Decomposition
 
@@ -524,7 +525,7 @@ Implementation complete. See `IMPLEMENTATION.md` for details.
 
 After a complete session, the session directory contains:
 - `NOTES.md` - **Concise** summaries and pointers to other files
-- `RESEARCH.md` - Research notes from paper (if applicable, from Researcher)
+- `RESEARCH.md` - Technical reference synthesis: algorithms, APIs, library guides (if applicable, from Researcher)
 - `PLAN.md` - The implementation plan (from Planner)
 - `PLAN-REVIEW.md` - Review of the plan
 - `IMPLEMENTATION.md` - Detailed implementation notes (from Implementer)

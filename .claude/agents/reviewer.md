@@ -314,7 +314,7 @@ Notes that aren't issues but worth mentioning (positive feedback, questions, sug
 
 When working in a session directory, you may reference any existing documents for context:
 - `NOTES.md` - Session history and agent summaries
-- `RESEARCH.md` - Algorithms and math from paper (from Researcher)
+- `RESEARCH.md` - Technical reference synthesis: algorithms, APIs, library guides (from Researcher)
 - `PLAN.md` - Implementation plan (from Planner)
 - `PLAN-REVIEW.md` - Your previous plan review (if re-reviewing)
 - `IMPLEMENTATION.md` - What was built and how (from Implementer)
