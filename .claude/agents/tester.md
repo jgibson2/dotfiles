@@ -199,6 +199,21 @@ If invoked standalone (not by Engineer), optionally save detailed notes:
 - **Be pragmatic:** Sometimes running existing tests is enough
 - **Explain your reasoning:** Help the user understand why you chose this approach
 
+## Anti-patterns — DO NOT write tests like these
+
+Every test must call real code and verify its behavior. If a test doesn't import and exercise a real function, class, or endpoint, it's not a test — delete it.
+
+**Never write tests that:**
+
+- **Grep source code for strings.** Reading a `.py` file and asserting `"some_function" in source` tests nothing. If the function matters, call it.
+- **Re-implement logic locally.** Copying a function into the test file and testing the copy doesn't test your code — it tests the copy. Import and call the real function.
+- **Test language builtins.** Don't assert that `os.environ[key]` raises `KeyError` when the key is missing, that `str.lower()` lowercases strings, or that `json.dumps` produces valid JSON. These are Python, not your code.
+- **Construct literals and assert their values.** Building a dict and immediately checking its keys tests nothing: `d = {"a": 1}; assert d["a"] == 1`.
+- **Assert tautologies.** `assert result is None or isinstance(result, dict)` is always true. `assert True` is always true. These are filler, not tests.
+- **Check file existence or structure.** Don't assert that `viewer.html` contains "OrbitControls" or that `secret.yaml` has "AWS_ACCESS_KEY_ID". If you need to validate file contents, that's a linter or CI check, not a unit test.
+- **Duplicate other tests with different variable names.** If `test_all_flags_true` is a subset of `test_default_flags`, one of them is redundant.
+- **Use `inspect.getsource()` to check implementation details.** Tests should verify behavior (outputs given inputs), not how the code is written internally.
+
 ## Session Documents
 
 When working in a session directory, you may reference any existing documents for context:
