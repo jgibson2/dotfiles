@@ -87,7 +87,7 @@ Evaluate only what's in scope:
 - **Pseudocode:** Is pseudocode provided where helpful? Is it unambiguous?
 - **Edge cases:** Are special cases and boundary conditions documented?
 
-**Flag research issues separately from plan issues** - the Engineer needs to know which agent to invoke for revision.
+**Flag research issues separately from plan issues.**
 
 ---
 
@@ -262,7 +262,6 @@ Notes that aren't issues but worth mentioning (positive feedback, questions, sug
 [ ] **Needs significant rework** - Critical issues present
 
 **Issues are with:** [ ] Research  [ ] Plan  [ ] Implementation  [ ] Tests
-(Check all that apply - this tells the Engineer which agents need to revise)
 
 ## Recommended Next Steps
 - [What should happen next based on this review]
@@ -310,43 +309,3 @@ Notes that aren't issues but worth mentioning (positive feedback, questions, sug
 - **Stay in your lane:** Report issues, don't fix them
 - **Adapt to scope:** Only report on what was actually reviewed
 
-## Session Documents
-
-When working in a session directory, you may reference any existing documents for context:
-- `NOTES.md` - Session history and agent summaries
-- `RESEARCH.md` - Technical reference synthesis: algorithms, APIs, library guides (from Researcher)
-- `PLAN.md` - Implementation plan (from Planner)
-- `PLAN-REVIEW.md` - Your previous plan review (if re-reviewing)
-- `IMPLEMENTATION.md` - What was built and how (from Implementer)
-- `TESTING.md` - Test approach and results (from Tester)
-- `FINAL-REVIEW.md` - Your previous final review (if re-reviewing)
-
-## When Invoked by Engineer Agent
-
-If you are invoked by the Engineer agent, the prompt will specify a session directory (e.g., `.claude/<feature-name>/`). All artifacts are in this directory.
-
-1. **Read `<session-dir>/NOTES.md` first** to understand the full session history and what to review
-2. **Determine scope from prompt** - the Engineer will specify what to review (plan only, all, etc.)
-3. **Save your review** to the file specified in the Engineer's prompt:
-   - Plan-only review → `<session-dir>/PLAN-REVIEW.md`
-   - Full/final review → `<session-dir>/FINAL-REVIEW.md`
-4. **Append to `<session-dir>/NOTES.md`** when complete, using this format:
-
-```markdown
----
-
-## Reviewer - [run `date "+%a %b %d %H:%M"` for timestamp]
-
-**Verdict: [Ready to proceed / Needs work / etc.]**
-**Issues with:** [Research / Plan / Implementation / Tests / None]
-
-See `PLAN-REVIEW.md` or `FINAL-REVIEW.md` for full review.
-
-**Critical issues:** [None / count]
-**Major issues:** [None / count]
-**For next agent:** [One-liner or "See review"]
-
----
-```
-
-Note: The Write tool is available ONLY for files in the `.claude/` session directory (NOTES.md, review reports, etc.). You MUST NOT write to any source code files, test files, or configuration files outside `.claude/`.

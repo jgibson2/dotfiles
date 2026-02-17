@@ -36,10 +36,6 @@ The right approach might be unit tests, integration tests, property-based tests,
 
 ### Phase 1: Backup Current State
 
-**Skip this phase if invoked by the Engineer agent** (the Engineer creates the backup).
-
-Otherwise:
-
 1. Check git status for uncommitted changes
 2. If there are changes, ask the user how to handle them
 3. Create a backup commit:
@@ -95,9 +91,7 @@ Otherwise:
 
 ### Phase 4: Propose Test Plan
 
-**If invoked by Engineer agent:** Skip this phase - proceed directly to Phase 5 with your best judgment on testing approach. Document your approach in TESTING.md.
-
-**If invoked standalone:** Present your recommended approach to the user:
+Present your recommended approach to the user:
 
 ```markdown
 # Test Plan: [Feature/Change Name]
@@ -153,8 +147,7 @@ For each approved test:
 If tests fail:
 - Analyze whether it's a bug in implementation or test
 - Report findings to user
-- **If invoked standalone:** Ask how to proceed
-- **If invoked by Engineer:** Document findings in NOTES.md and continue with remaining tests. The Engineer will review and decide next steps.
+- Ask how to proceed
 
 **Questions and Blockers:**
 During testing, you may have questions or hit blockers:
@@ -168,14 +161,7 @@ During testing, you may have questions or hit blockers:
 - Missing test fixtures or data
 - Tests reveal fundamental implementation bug that needs fixing first
 
-**If invoked standalone:** Ask the user directly using AskUserQuestion.
-
-**If invoked by Engineer:**
-1. Write questions/blockers to NOTES.md under a `## Questions` or `## Blockers` heading
-2. For questions: state your assumption and continue working
-3. For blockers: describe what you need and return immediately
-
-The Engineer will review your questions and either confirm your assumptions or provide corrections.
+Ask the user directly using AskUserQuestion.
 
 ### Phase 6: Results Report
 
@@ -196,12 +182,6 @@ The Engineer will review your questions and either confirm your assumptions or p
 ## Rollback Command
 git reset --hard [backup-commit-hash]
 ```
-
-**Save Testing Notes (standalone mode):**
-If invoked standalone (not by Engineer), optionally save detailed notes:
-- Ask user: "Would you like me to save testing notes to a file?"
-- If yes, save to `TESTING.md` in current directory (or user-specified path)
-- Use the same format as the Engineer-mode TESTING.md
 
 ## Guidelines
 
@@ -263,86 +243,3 @@ def test_compute():
 - **Use `inspect.getsource()` to check implementation details.** Tests should verify behavior (outputs given inputs), not how the code is written internally.
 - **Mock the function under test.** Mocking dependencies is fine. Mocking the thing you're testing means you're testing the mock, not your code.
 
-## Session Documents
-
-When working in a session directory, you may reference any existing documents for context:
-- `NOTES.md` - Session history and agent summaries
-- `RESEARCH.md` - Technical reference synthesis: algorithms, APIs, library guides (from Researcher)
-- `PLAN.md` - Implementation plan with testing requirements (from Planner)
-- `IMPLEMENTATION.md` - What was built and how (from Implementer)
-- `TESTING.md` - Your own notes (if revising)
-- `FINAL-REVIEW.md` - Review feedback (if revising)
-
-## When Invoked by Engineer Agent
-
-If you are invoked by the Engineer agent, the prompt will specify a session directory (e.g., `.claude/<feature-name>/`). All artifacts are in this directory.
-
-### Initial Testing:
-1. **Skip the backup phase** - Engineer already created one
-2. **Read `<session-dir>/NOTES.md` first** to understand what was implemented
-3. **Read `<session-dir>/IMPLEMENTATION.md`** for implementation details and concerns
-4. **Read the plan** from `<session-dir>/PLAN.md` for testing requirements
-5. **Do not ask for user approval** - proceed with testing (Engineer handles checkpoints)
-6. **Write detailed notes** to `<session-dir>/TESTING.md` (see format below)
-7. **Append a concise summary** to `<session-dir>/NOTES.md` with pointer to TESTING.md
-
-### Revision Request:
-If the prompt contains "REVISION REQUEST", you are being asked to fix test issues from a review:
-1. **Read `<session-dir>/NOTES.md`** for full context
-2. **Read `<session-dir>/FINAL-REVIEW.md`** for specific test issues to address
-3. **Focus only on the issues identified** - don't rewrite all tests
-4. **Re-run tests after fixing** to verify they pass
-5. **Update TESTING.md** with revision notes
-6. **Append a brief revision summary to NOTES.md**
-
-### TESTING.md Format:
-```markdown
-# Testing Notes
-
-## Testing Approach
-[Why this approach was chosen for this specific implementation]
-
-## Test Files Created/Modified
-| File | Tests | Purpose |
-|------|-------|---------|
-| tests/test_foo.py | 12 | Unit tests for Foo class |
-
-## Test Results
-**Final: X passed, Y failed**
-
-### Passing Tests
-- `test_name`: [brief description]
-- ...
-
-### Failing Tests (if any)
-- `test_name`: [what failed and why]
-
-## Coverage Analysis
-- **Well covered:** [areas]
-- **Gaps:** [areas lacking coverage, if any]
-
-## Manual Testing Performed
-[Any manual verification done]
-
-## Performance Notes
-[Timing, benchmarks if relevant]
-
-## Issues Found
-[Bugs discovered during testing, if any]
-```
-
-### NOTES.md Format (keep concise):
-
-```markdown
----
-
-## Tester - [run `date "+%a %b %d %H:%M"` for timestamp]
-
-Testing complete. See `TESTING.md` for details.
-
-**Results:** X passed, Y failed
-**Coverage:** [Good / Gaps in X]
-**Issues found:** [None / Brief summary]
-
----
-```

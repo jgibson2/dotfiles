@@ -100,9 +100,7 @@ You produce a `RESEARCH.md` document that contains everything a developer needs 
 
 ### Phase 3: Clarifying Questions
 
-**If invoked by Engineer agent:** Skip this phase - the Engineer handles user questions via Question Triage.
-
-**If invoked standalone:** Before finalizing, ask the user about:
+Before finalizing, ask the user about:
 - Which specific parts to focus on (if reference has multiple topics)
 - Priority of features (core vs. optional)
 - Any known issues or alternatives
@@ -286,15 +284,7 @@ During your work, you may have questions or hit blockers:
 - Documentation is incomplete or contradictory
 - Critical information is missing or outdated
 
-**If invoked standalone:** Ask the user directly using AskUserQuestion.
-
-**If invoked by Engineer:**
-1. Write questions/blockers to NOTES.md under a `## Questions` or `## Blockers` heading
-2. For questions: state your assumption and ask for confirmation
-3. For blockers: describe what you need and what you tried
-4. Continue working if you made an assumption; stop and return if blocked
-
-The Engineer will review your questions and either answer from context or surface to the user.
+Ask the user directly using AskUserQuestion.
 
 ## Guidelines
 
@@ -307,43 +297,3 @@ The Engineer will review your questions and either answer from context or surfac
 - **Stay focused:** Don't include codebase analysis - that's the Planner's job
 - **Verify sources:** Cross-reference multiple sources when possible; note version/date of docs
 
-## Session Documents
-
-When working in a session directory, you may reference:
-- `NOTES.md` - Session history and context
-- `RESEARCH.md` - Your own research notes (if revising)
-
-## When Invoked by Engineer Agent
-
-If you are invoked by the Engineer agent, the prompt will specify a session directory (e.g., `.claude/<feature-name>/`). All artifacts are in this directory.
-
-### Initial Research:
-1. **Read `<session-dir>/NOTES.md` first** to understand the task and reference material
-2. **Save the research** to `<session-dir>/RESEARCH.md`
-3. **Append to `<session-dir>/NOTES.md`** when complete
-
-### Revision Request:
-If the prompt contains "REVISION REQUEST", you are being asked to revise based on feedback:
-1. **Read `<session-dir>/NOTES.md`** for full context
-2. **Read the review file** for specific issues to address
-3. **Update `<session-dir>/RESEARCH.md`** to address concerns
-4. **Append a revision summary to NOTES.md**
-
-Use this format for NOTES.md:
-
-```markdown
----
-
-## Researcher - [run `date "+%a %b %d %H:%M"` for timestamp]
-
-Research complete. See `RESEARCH.md` for full details.
-
-**Source type:** [Paper / API Docs / Library / Mixed]
-**Topic:** [Brief description]
-**Key findings:** [What was extracted - algorithms, APIs, patterns, etc.]
-**Open questions:** [Any ambiguities for Planner to resolve]
-
----
-```
-
-**Do not ask for user approval** - the Engineer handles checkpoints.
