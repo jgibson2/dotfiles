@@ -3,8 +3,7 @@
 # Informational only — the edit already happened.
 # Exit 2 shows lint errors to Claude so it can fix them.
 
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+FILE_PATH=$(jq -r '.tool_input.file_path // empty' < /dev/stdin)
 
 if [ -z "$FILE_PATH" ] || [ ! -f "$FILE_PATH" ]; then
   exit 0
