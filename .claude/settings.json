@@ -1,0 +1,39 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/lint-on-edit.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "agent",
+            "prompt": "Context is about to be compacted. Summarize the current session state so work can resume after compaction.\n\nWrite a concise summary to .claude/COMPACT_STATE.md containing:\n- What task or feature is being worked on\n- What has been completed so far\n- What remains to be done\n- Any important decisions, blockers, or context that shouldn't be lost\n\nTo gather this information:\n1. Run `git diff --stat` and `git log --oneline -5` to see recent changes\n2. Look for session files in .claude/*/ (NOTES.md, PLAN.md, etc.)\n3. Check the task list if available\n\nBe concise — this file is injected as context after compaction.\n\nHook input: $ARGUMENTS",
+            "model": "haiku",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-compact-context.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

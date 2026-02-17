@@ -117,6 +117,19 @@ Create a comprehensive Markdown document with these sections:
 - How it connects to existing systems
 - Required modifications to existing code (if any)
 
+## Feature Inventory
+*(Include ONLY for replacement, migration, or refactoring tasks. Skip for new features or bug fixes.)*
+
+Map every public function, class, endpoint, or behavior being replaced to its disposition:
+
+| Old Component | Location | New Component | Status | Notes |
+|---------------|----------|---------------|--------|-------|
+| `old_func()` | `src/old.py:42` | `new_func()` | MIGRATED | Signature changed |
+| `OldClass.method()` | `src/old.py:87` | — | REMOVED | Absorbed by NewClass |
+
+**Status values:** MIGRATED, REMOVED (explain why), UNCHANGED, DEFERRED
+**Completeness check:** Every public symbol in the old code MUST appear. Missing entries = gap in the plan.
+
 ## Solution Design
 
 ### Approach
