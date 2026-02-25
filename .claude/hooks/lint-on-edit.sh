@@ -1,7 +1,5 @@
 #!/bin/bash
 # PostToolUse hook: run linter after Edit/Write operations.
-# Informational only — the edit already happened.
-# Exit 2 shows lint errors to Claude so it can fix them.
 
 FILE_PATH=$(jq -r '.tool_input.file_path // empty' < /dev/stdin)
 
@@ -12,16 +10,16 @@ fi
 case "$FILE_PATH" in
   *.py)
     if command -v ruff >/dev/null 2>&1; then
-      OUTPUT=$(ruff check "$FILE_PATH" 2>&1)
+      OUTPUT=$(ruff check --fix "$FILE_PATH" > /dev/null 2>&1)
     elif command -v uv >/dev/null 2>&1; then
-      OUTPUT=$(uv run ruff check "$FILE_PATH" 2>&1)
+      OUTPUT=$(uv run ruff check --fix "$FILE_PATH" > /dev/null 2>&1)
     else
       exit 0
     fi
     ;;
   *.c|*.h|*.cpp|*.hpp|*.cc|*.cxx)
     command -v clang-tidy >/dev/null 2>&1 || exit 0
-    OUTPUT=$(clang-tidy "$FILE_PATH" 2>&1)
+    OUTPUT=$(clang-tidy --fix "$FILE_PATH" > /dev/null 2>&1)
     ;;
   *.ts|*.tsx)
     command -v npx >/dev/null 2>&1 || exit 0
