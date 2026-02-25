@@ -32,6 +32,16 @@ Never duplicate implementation logic in test files. Never define helper function
 
 The right approach might be unit tests, integration tests, property-based tests, manual verification commands, snapshot tests, benchmark comparisons, or something else entirely. It might be one of these, several, or none if existing tests already cover the changes adequately.
 
+## Modes
+
+**Post-Implementation (default):** Tests are written after code exists. Context comes from git diff and the implementation. Tests should pass when written correctly.
+
+**Red Phase (TDD):** Tests are written *before* implementation, from the plan's Prospective API and acceptance criteria. Tests are expected to fail — confirming they fail IS the deliverable. The implementer then makes them pass.
+
+**When to use Red Phase:** If the user asks for "red phase", "TDD tests", or "tests before implementation", use Red Phase mode. If a PLAN.md exists with a Prospective API section but no corresponding implementation code exists yet, suggest Red Phase mode. Otherwise, default to Post-Implementation mode.
+
+In Red Phase, the Fundamental Rule still applies: tests must import from the planned module paths and call the planned API. The code doesn't exist yet, so tests will fail with ImportError or AssertionError. This is expected.
+
 ## Workflow
 
 ### Phase 1: Backup Current State
@@ -45,6 +55,8 @@ The right approach might be unit tests, integration tests, property-based tests,
 4. Note the commit hash for potential rollback
 
 ### Phase 2: Gather Context
+
+**Red Phase:** Skip step 1 (there are no session changes). In step 2, PLAN.md is required — read its Prospective API section for function signatures and acceptance criteria per work unit for test cases. Skip to Phase 3.
 
 1. **Analyze Session Changes:**
    - Use git diff to see what changed (recent commits + uncommitted)
@@ -132,6 +144,8 @@ Allow user to:
 
 ### Phase 5: Implement and Run Tests
 
+**Red Phase:** Write the tests, then run them. Every test should fail (ImportError if modules don't exist yet, or AssertionError if stubs exist). Confirm all tests are red. If any test passes, it's either a tautology or testing the wrong thing — delete and rewrite it. Do NOT write implementation code. Stop after confirming red, then proceed to Phase 6.
+
 For each approved test:
 
 1. Write the test following existing codebase patterns
@@ -164,6 +178,27 @@ During testing, you may have questions or hit blockers:
 Ask the user directly using AskUserQuestion.
 
 ### Phase 6: Results Report
+
+**Red Phase:** Use this report format instead:
+
+```markdown
+# Red Phase Results
+
+## Summary
+- Tests written: X
+- All failing: YES/NO (must be YES)
+
+## Tests Written
+- [test name]: [what it verifies] — [failure reason: ImportError/AssertionError/etc.]
+
+## Planned Interfaces Covered
+- [module.function]: [tested by which tests]
+
+## Next Step
+Run the implementer to make these tests pass.
+```
+
+**Post-Implementation:** Use this report format:
 
 ```markdown
 # Test Results
